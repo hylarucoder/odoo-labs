@@ -35,31 +35,19 @@ RUN apt install -y python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-de
     liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev libxcb1-dev libpq-dev \
     wget
 
-RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb && dpkg -i ./wkhtmltox_0.12.6-1.focal_amd64.deb
+# RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb && apt install -y ./wkhtmltox_0.12.6-1.focal_amd64.deb
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_arm64.deb && apt install -y ./wkhtmltox_0.12.6-1.focal_arm64.deb
 
 # Install rtlcss (on Debian buster)
 RUN npm install -g rtlcss
 
+WORKDIR /etc/odoo-labs
+
 ENV PYPI=https://mirrors.aliyun.com/pypi/simple/
 ENV PIP_DEFAULT_TIMEOUT=1000
 RUN pip install -U pip -i $PYPI
-
-WORKDIR /opt/odoo
-
-COPY ./config/odoo.conf /etc/odoo/
-
-RUN chown odoo /etc/odoo/odoo.conf \
-    && mkdir -p /mnt/extra-addons \
-    && chown -R odoo /mnt/extra-addons
-VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
-
-# Expose Odoo services
+COPY . .
+RUN pip install -r ./odoo/requirements.txt -i $PYPI
 EXPOSE 8069 8071 8072
 
-# Set the default config file
-ENV ODOO_RC /etc/odoo/odoo.conf
-
-USER odoo
-
-ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
