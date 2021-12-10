@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  web:
+    image: odoo:local
+    depends_on:
+      - postgres
+    ports:
+      - "8069:8069"
+    volumes:
+      - "web-data:/var/lib/odoo"
+      - "./odoo:/opt/odoo"
+      - "./config:/etc/odoo"
+      - "./addons:/mnt/extra-addons"
+    environment:
+      - HOST=postgres
+      - USER=odoo
+      - PASSWORD=odoo
+
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=./volumns/postgresql/data/pgdata
+    volumes:
+      - db-data:/volumes/postgresql/data/pgdata
+
+  redis:
+    image: redis:latest
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 30s
+      retries: 50
+    restart: always
+
+volumes:
+  web-data:
+  db-data:
+
