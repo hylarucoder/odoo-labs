@@ -55,7 +55,9 @@ WORKDIR /var/www/odoo
 
 ENV PYPI=https://mirrors.aliyun.com/pypi/simple/
 ENV PIP_DEFAULT_TIMEOUT=1000
-RUN pip install -U pip -i $PYPI && pip install -r ./odoo/requirements.txt -i $PYPI
+RUN pip install -U pip -i $PYPI 
+COPY ./odoo/requirements.txt ./odoo/requirements.txt
+RUN pip install -r ./odoo/requirements.txt -i $PYPI
 COPY . .
 RUN pip install -e ./odoo
 EXPOSE 8069 8071 8072
