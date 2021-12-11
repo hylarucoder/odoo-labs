@@ -8,18 +8,19 @@ services:
       - "8069:8069"
     volumes:
       - "web-data:/var/lib/odoo"
-      - "./odoo:/etc/odoo"
-      - "./config:/etc/odoo"
-      - "./extra-addons:/mnt/extra-addons"
+      - "./odoo/:/etc/odoo/"
+      - "./config/:/var/www/odoo/config/"
+      - "./extra-addons/:/var/www/odoo/extra-addons/"
     environment:
-      - HOST=postgres
       - USER=odoo
       - PASSWORD=odoo
+    command: bash -c "/etc/odoo/odoo-bin -c /var/www/odoo/config/odoo.conf"
+
 
   postgres:
     image: postgres:13
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=odoo
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
     volumes:
