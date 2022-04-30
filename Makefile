@@ -16,11 +16,10 @@ help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 shell_plus:
-	docker-compose run --rm tifa-toolbox bash -c "tifa-cli shell_plus"
+	docker-compose run --rm web bash -c "odoo-cli shell"
 
 start: ## runserver
-	docker-compose stop web
-	docker-compose up --no-deps web
+	docker-compose run --rm --service-ports web
 
 build-odoo: ## > tifa
 	docker build -t 'odoo:local' -f 'compose/web/Dockerfile' .
