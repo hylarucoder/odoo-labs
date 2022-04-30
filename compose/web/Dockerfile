@@ -46,12 +46,11 @@ RUN apt-get update && \
     zlib1g-dev \
     wget
 
-# RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb && apt install -y ./wkhtmltox_0.12.6-1.focal_amd64.deb
 RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_arm64.deb && apt install -y ./wkhtmltox_0.12.6-1.focal_arm64.deb
 
 RUN npm install -g rtlcss
 
-WORKDIR /var/www/odoo
+WORKDIR /var/www/odoo/
 
 ENV PYPI=https://mirrors.aliyun.com/pypi/simple/
 ENV PIP_DEFAULT_TIMEOUT=1000
